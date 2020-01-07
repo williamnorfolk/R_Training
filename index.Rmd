@@ -9,7 +9,7 @@ output:
 
 ## Welcome to Intro to R Training 
 
-The purpose of this training is to guide you through the download/installation of R, Rstudio, and Pandoc as well a a breif crash course in some of the functioniality of the program for data organization/visualization.  
+The purpose of this training is to guide you through the download/installation of R, Rstudio, and Pandoc as well as a brief crash course in some of the functioniality of the program for data organization/visualization.  
 
 To start we will download all required programs to run R readily from your personal computer. Note this tutorial will utlize Rstudio which is a set of integrated tools designed to make the usage of R more user friendly.  
 
@@ -104,7 +104,9 @@ All direct typing into the console will start behind the **>** symbol located at
 
 The console is an extremely useful tool when working in Rstudio. While you are unlikely to perform a large amount of coding directly into the console, this functionality is very helpful when troubleshooting/syntax testing to ensure your code is functional before directly entering it into your working script. 
 
-The console also will save a history of all of the commands you have previously run in the program. This is helpful when attempting to backtrack and/or reuse code from a previous part of your analysis. _Simply scroll up and down in the console to see all previous commands_.
+The console also will save a history of all of the commands you have previously run for your current session. This is helpful when attempting to backtrack and/or reuse code from a previous part of your analysis. _Simply scroll up and down in the console to see all previous commands_.
+
+**Note** any commands entred into the console will be **lost** after quitting your current R session. So if you would like to keep any code that you entered directly into the console you must copy the code to the script tab for usage later. 
 
 ## The Script Tab (top left)
 
@@ -145,7 +147,7 @@ knitr::include_graphics("./images/global_environ.png")
 
 We will cover the details of the items in the coding introduction below, for now know that this pane is where these items will be stored for reference while conducting analysis. _We have not done any analysis as of yet so your global envrionment should be empty._ 
 
-## The file Viewer (bottom right)
+## The File Viewer (bottom right)
 
 The last pane of the Rstudio screen is the file viewer and should look as below: 
 
@@ -167,3 +169,111 @@ Toggle your file viewer to the **Packages** tab to view the packages library.
 You should see a number of listed packages that are installed (these are intrinsic to base R) usage of each package will be indicated by the presence or absence of a check mark.
 </div>
 
+# Markdown Usage Basics
+
+Now that you are familar with the layout of Rstudio lets dig into how R Markdown scripts work for data anaylsis. As briefly described above, you can think of a Markdown as a word document that has R code embedded between pain text. All markdowns begin the a YAML header. The YAML is the multicolored text between two lines of ```---``` (pictured below).
+
+```{r YAML, out.height = "100%", out.width = "100%", echo=FALSE}
+knitr::include_graphics("./images/yaml.png") 
+```
+
+The YAML header contains important information for the markdown file related to formatting, output, as well as author/date stamps. There were **many** different setting options you can explore with Markdown and the YAML, for this tutorial we will not change any details of the YAML however you want to ensure that you **do not** delete the header when working in markdown. 
+
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**  
+In the script tab lets begin to modify your Markdown file you created. Start by deleting everything except the YAML header. 
+
+Beneath the YAML add some text commentary to start off you first Markdown script. Something along the lines of "This is a R Makrdown tutorial script for (your name)." Feel free to add any additional text that may be useful for you in the future. 
+
+It is always a good idea to add lots of commentary in you analysis scripts to ensure you can replicate your results/reuse methods in the future. 
+</div>
+
+Plain text commentary is great/helpful but I assume you are using R for coding so lets work in a code chunk now. To create a new code chunk press **Control+Alt+I** (for Windows) or **Command+Option+I** (for Mac). Alternately you can use **Code** then **Insert Chunk** from the tool bar in the top left.
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**  
+Create a new code chunk in your markdown script. 
+</div>
+
+**Remember** when working in a code chunk Rstudio will interpret any plain text as code. If your text is not executable syntax you will receive an error when attempting to run a chunk. However, you can tell R to ignore text within a code chunk simply by placing a **#** before the text you would like R to ignore. This functionality allows you to add commentary directly into a code chunk (which is very helpful when using complex code). 
+
+```
+a <- c(1,2,3,4,5) #The text before the # symbol is code, and this sentance is ignored as plain text.
+```
+When working in Rstudio different functions, text options, commands, etc. will appear as a different color on your studio screen (the specific color depends on you R theme). As you work on analysis make note of these color changes as they can help indicate the presence of a typing error if a particular part of your code is not the correct color before attempting to run a chunk.
+
+# Libraries
+The final bit of background you will need to understand before beginning to code in R is how **libraries** (sometimes called packages) function within the program. You can think of base R _(what you downloaded during installation)_ as a skeleton and all of the details and features of your specific Rstudio are the ilbraries you have loaded. Base R contain intrinsic functions (baisc math, organization commands, etc.) additional libraries expand the scope of your analysis by adding new functions, modifying existing ones, simplifying actions, etc. Libraries are free downloadable content that you install into your specific local (on you computer) R program. To use a specific library you need to _install_ it **once** however you must _load_ the library in **every** R script where you would like to use it. Typically the first code chunk in your script contains code to load all required libraries to successfully run the script. 
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**  
+Let's install a library you will need for this tutorial.
+
+We will install **tidyverse**.
+
+In the **console** type the following syntax:
+```
+install.packages("tidyverse")
+```
+When installing multiple packages you will have to type the install.packages command for each package individually then hit enter to allow them to install.  
+_Note_ some packages may take a few minutes to install (specifically tidyverse).  
+_Note_ you may notice R will try to autocomplete syntax, to accept hit **enter** to ignore simply continue typing.
+</div>
+
+Now that the tidyverse is installed lets load it for use in our Markdown script. You can load a library in the script tab **or** the console. Typically you will want to include your library loading as the first code chunk in your script tab, however console usage is just fine for testing. Just be sure to remember all direct console coding will be lost at the end of your R session so be sure to move any important code/commands to the script tab and save before closing! 
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**  
+Let's load in tidyverse.  
+In the blank code chunk you created type the syntax below then hit the **green play** (run) button on the code chunk.
+```
+library(tidyverse)
+```
+If done correctly you should see the screen below:
+
+```{r libs, out.height = "100%", out.width = "100%", echo=FALSE}
+knitr::include_graphics("./images/load_tidy.png") 
+```
+
+</div>
+
+Many libraries will produce an information loading output as tidyverse does so there is nothing to worry about if these appear. The information in this message is important for later coding needs however, for the scope of this tutorial you will not need to worry about it. 
+
+The library **tidyverse** is one of the most useful packages available in R. Tidyverse is actually a combination of the packages: ggplot2, tibble, tidyr, readr, purrr, dplyr, stringr, and forcats so when you use the command ```library(tidyverse)``` you actually load all of these packages. These libraries work togeather to provide coding commands for data organization, cleaning, and resturcturing (commonly referred to as _tidying_) as well as data visualization. The remainder of this tutorial will introduce R coding basics using Base R and Tidyverse commands. 
+
+_It should be noted_ that the scope of this tutorial will cover only a very small portion of all the functionality of Base R and Tidyverse and is designed primairly to intorduce the flow of R coding rather than specific commands. Additionally, most functions in R can be acomplished through multiple different coding syntaxes so the structure presented here is by no means the only way to acomplish specific tasks. 
+
+I encourage you to learn as many commands as possible to expand your knowledge of R!
+
+# Coding Crash Course
+
+From this point onward all coding 
+
+
+To Do
+
+
+
+Coding Intro
+    objects
+    classes
+    basic commands
+    tidyverse
+    ggplot
