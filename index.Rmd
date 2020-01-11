@@ -264,7 +264,171 @@ I encourage you to learn as many commands as possible to expand your knowledge o
 
 # Coding Crash Course
 
-From this point onward all coding 
+From this point onward all coding will take place within the script tab inside of code chunks. Feel free to create as many code cunks as you would like throughout the turotial. I recommend creating a code chunk for each major section at least so you are able to modify/test lines individually without having to rerun all previous code that you have created. 
+
+_Let's get started!_
+
+
+## Objects
+
+Most of the core functions of R depend on the creation of **objects**. Objects are items that _you_ create in R that contain information of your choosing. Most frequently objects are used in biological analyses to assign groups of information such as a list of observations or a set of data points. Once you assign information to an object you can _call_ that object in your code simply by typing the name of the object. 
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**  
+Let's create an object called "test_data". Objects can be given any name you choose however, it is bst to avoid using special characters (such as: !@#$%&./][)]) to avoid confusion. As a rule, I typically create objects entirely in lower case (R is case sensetive) and I use underscores **_** as spaces to ensure the object is continious text.  
+
+For our test_data object will will assign a list of numbers 0-10 to become this object using the code below.
+
+```
+test_data <- c(0:10)
+```
+When creating an object you always begin with the object name followed by the assignmnet syntax **<-**. You can think of this syntax as an arrow which saves the code to the right into the object to the left. 
+
+I have always found it easier to reade code as sentances. This example of code would read aloud as **"Save the numbers 0 through 10 as the object titled test_data."**
+
+_Additional Code Notes_
+In addition to the object creation here we also used the **c()** function. The c() function creates a list. In this case we used a list of numbers, however c() can be used to create a list of anything. **c(apple, banana, pear)** would create a list that states **apple, banana, pear**. When using numbers lists can be created by seperating all numbers by commas or (as used above) can be continious using a **:** with the minimum and maximum values. 
+
+</div>
+
+Now that you have created the object test_data you can call this object using the name anytime you wish to reference the data. This is extremely useful when preforming data modificaiton. Let's say for example your test_data object represents some quantative information you have collected from your experiment. However, the raw form of the data is not useful to your analysis and instead you would like the log10 of each data point. Without R (or another computing platform) you would have to perform these calculations individually by hand, however you can use the object function to apply this modification to all of your data in the saved object. Try the code below:
+
+```
+log10(test_data)
+```
+Using the syntax above R will generate the results of this calculation, however if you would like to keep the log10 version of your test_data you must assign it to an object. To do this, you can assign a completely new object or overwrite your previous test_data object. Note that if you overwrite an object **that object will become the new data** and you will not be able to access the non-log10 version for future usage. 
+
+```
+test_data <- log10(test_data) #This will OVERWRITE your test_data object
+```
+```
+test_data_logten<- #This will SAVE your log10 version of the data as a new object called test_data_logten
+```
+
+Object assignment has thousands of usages in the Rstudio world beyond simple data modification. More often than not in the biological sciences you will be using objects to assign datasets, modify them, and generate plots of different variables/combinations of them. We will explore this functionality in further analyses.
+
+## Classes
+
+When using objects it is important to understand the **classes** of these objects. Classes will determine what types of modification can be done to specific objects and how these objects can be visualized. The most important object classes in R are: 
+
+**numeric** (also called **double** or **integer** if entirely integer numbers): These are objects are entirely numbers/groups of numbers.
+**character**: Objects that contain non-numeric values (such as a list of state names).
+**factor**: Objects that are categorical in nature (such as sampling sites). Factors will indicate which category data belongs to. These are very powerful in life sciences as variable indicators in an experiemnt. 
+**data.frame** (called **tibbles** in tidyverse): Objects that are datasets. Think of these as excel files where observations are the rows, and variables are the columns. 
+
+There are many more variations of classes in R that you may encounter, however these are the primary classes you will be woking with. Note that **character** is the default class for objects in R if the program cannot predetermine which class an object belongs to after creation. 
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**   
+Let's check the class of our test_data object we created with the code below:
+
+```
+class(test_data)
+```
+The test_data object should be of the class **integer** if created correctly. R will often "guess" the correct class of an object based on the input that is within the object. 
+
+At times you will likely need to change the class of an object to perform specific operations. Let's make a modification to test_data using the code below:
+
+```
+test_data_character <- as.character(as.integer(test_data))
+```
+
+What the code above has done is created a new object (you can view it in your global environment) called test_data_character which contains the same information as test_data, but instead of a **integer** class is is **character**. This formula of  
+**new object name <- previous class(new class(old object name))**
+
+_Note_ that some objects cannot be reclassifed to a different class based on the input of the data. For example, you cannot change the list: apple, banana, pear to a numeric class since it does not contain any numbers. 
+
+</div>
+
+Working in life sciences you will most often be working with a set of data that you have collected and organized into a data table (such as in the case with excel files). Let's practice with a prepared dataset of the class **tibble**. R comes preloaded some practice datasets that we can train with. For this tutorial we will use the **iris** dataset which is a famous dataset that gives measurements (cm) of various components of three species of iris. To load this data use the syntax below:
+
+```
+iris_Data <- as.tibble(iris) #make sure you have tidyverse loaded before using this code
+```
+After running this code you should see a new object in your global environment called irid_data containing 150 observations and five variables. Click on the iris_data object in the global environment tab to view the data. You should see that the variables in the dataset are **Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, and Species.** Each row is an observation from the experiment.
+
+_Note_ you can click on any object in your global environment which is a data frame and view it in this manner. 
+
+The **iris** dataset is a **tidy** dataset, meaning it has already been formatted/organized for processing in R and is ready for visualization and/or statistical analyses. We will discuss data **tidying** at a later time with some of our own class data but for now we will run some additional analyses using iris.
+
+
+## Data Wrangling
+
+Regardless of how tidy your data is you will almost always have to still do some **wrangling** with your dataset to get the important data information from R. Wrangling can be described as the process of organizing your data in a way so your analyses produce appropriate answers to your questions. Wrangling can consist of but is not limited to: filtering, modifying variables, recoding values, removal of NA values, etc. 
+
+The **tidyverse** package enables a number of functions which can be used for these actions. We will try a few in the code chunks below:
+
+### Filter
+
+First let's try a **filter**! Filter can be used to select observations based on a given condition in the code. We will select all observations from the iris data that are from the species _setosa_. Enter the code below into a new code chunk. _Remember_ pay close attention to upper and lower cases!
+
+```
+iris_setosa <- filter(iris_data, Species == "setosa")
+```
+This code should have created a new object in your global environment called iris_setosa which contains 50 observations and 5 variables. All observations here should be the species _setosa_. In sentance form, this code chunk reads: "From the object iris_data select all entries where the Species variable is equal to _setosa_ and save them into a new object called iris_setosa."
+
+
+### Mutate
+
+Next will will try a **mutate**! Mutate is one of the most useful functions in the tidyverse. This function allows you to modify variables within a dataset (change, recode, add new variables, etc.). Let's start by adding a new variable which contains the common name of the different iris species (as opposed to the scientific names which are included with the dataset). We want to add this new variable to the complete iris_data dataset so will will work with this object rather than create a new one. In a new code chunk input the code below:
+
+```
+iris_data <- iris_data %>% mutate(common_name = recode(Species,
+                                    "setosa" = "bristle-pointed iris",
+                                    "versicolor" = "blue flag",
+                                    "virginica" = "virginia iris"))
+                                    
+```
+If everything worked you should see that your previously generated object iris_data now contains 150 observations (this is unchanged) and **6** variables. If you view your iris_data object you will now see that there is a new variable titled **common_name** and the common name in the column corresponds to the subsequent scientific name. 
+
+If you received an error with this code go back through line by line and check your **""** **,** and **()** usage. Hitting the **return** key at any point when writing code will have no effect on the outcome. _Note_ in the code above I use return after each species name recode to organize the code in a more reabable manner. This code line would also work if it was created as continious syntax (however this is often tough on the eyes). 
+
+This code chunk reads as: "Take the iris_data object then add a new variable called common_name. Populate this variable based on the information in the Species variable: setosa is equal to bristle-pointed iris, versicolor is equal to blue flag, and virginica is equal to virginia iris."
+
+**Take special note** of the usage of the **%>%** syntax. This is called a **pipe**. Pipes allow you to modify data objects by entering the name of the object followed by the %>% syntax. In the sentance above the pipe would represent the **then** in the code. 
+
+Next let's use mutate to modify an existing variable. We will change the Sepal.Lenght variable from cm to mm. Use the code below:
+
+```
+iris_data <- iris_data %>% mutate(Sepal.Length = Sepal.Length * 10)
+```
+
+If everything worked well you should see that all of the Sepal.Length measures in your iris_data object have been multiplied by 10 to give measures in mm. 
+
+This code chunk reads as: "Take the iris_data object and change the Sepal.Length variable. The new values will be the previously recorded values in Sepal.Length multiplied by 10."
+
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class = "blue">
+
+**Try It!**  
+Change the three remaining measurement values (Sepal.Width, Petal.Length, and Petal.Width) in your iris_data object from cm to mm using the code template generated above. 
+</div>
+
+### Select
+
+Lastly, let's try a **select** function. Select is used to remove variables from a dataset based on your needs. This is a very useful function when you have data with a high number of variables. For example let's say we are only interested in the **width** variables in our data and want to remove the two length variables, select is ideal for this situation. Use the code below to select the desired variables. 
+
+```
+iris_data_width_only <- iris_data %>% select(Sepal.Width, Petal.Width, Species, common_name)
+```
+This code chunk reads as: "Using the iris_data object select the variables: Sepal.Width, Petal.Width, Species, and common_name and save them into the new object iris_data_width_only."
+
+Alternately, you can **deselect** using the minus syntax (displayed below). Both options will produce the same results.
+
+```
+iris_data_width_only <- iris_data %>% select(-Sepal.Length, -Petal.Length)
+```
+This code chunk reads as: "Using the iris_data object remove the variables: Sepal.Length and Petal.Length and save the remaining variables into the new object iris_data_width_only."
 
 
 To Do
@@ -272,8 +436,8 @@ To Do
 
 
 Coding Intro
-    objects
-    classes
+    
+    
     basic commands
     tidyverse
     ggplot

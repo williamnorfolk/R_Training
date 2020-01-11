@@ -10,7 +10,7 @@
 
 <meta name="author" content="William Norfolk" />
 
-<meta name="date" content="2020-01-06" />
+<meta name="date" content="2020-01-11" />
 
 <title>Intro to R Training</title>
 
@@ -1532,7 +1532,11 @@ $(document).ready(function () {
       </ul></li>
       <li><a href="#markdown-usage-basics">Markdown Usage Basics</a></li>
       <li><a href="#libraries">Libraries</a></li>
-      <li><a href="#coding-crash-course">Coding Crash Course</a></li>
+      <li><a href="#coding-crash-course">Coding Crash Course</a><ul>
+      <li><a href="#objects">Objects</a></li>
+      <li><a href="#classes">Classes</a></li>
+      <li><a href="#data-wrangling">Data Wrangling</a></li>
+      </ul></li>
       </ul>
     </div>
 </div>
@@ -1731,9 +1735,104 @@ In the blank code chunk you created type the syntax below then hit the <strong>g
 </div>
 <div id="coding-crash-course" class="section level1">
 <h1>Coding Crash Course</h1>
-<p>From this point onward all coding</p>
+<p>From this point onward all coding will take place within the script tab inside of code chunks. Feel free to create as many code cunks as you would like throughout the turotial. I recommend creating a code chunk for each major section at least so you are able to modify/test lines individually without having to rerun all previous code that you have created.</p>
+<p><em>Let’s get started!</em></p>
+<div id="objects" class="section level2">
+<h2>Objects</h2>
+<p>Most of the core functions of R depend on the creation of <strong>objects</strong>. Objects are items that <em>you</em> create in R that contain information of your choosing. Most frequently objects are used in biological analyses to assign groups of information such as a list of observations or a set of data points. Once you assign information to an object you can <em>call</em> that object in your code simply by typing the name of the object.</p>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="blue">
+<p><strong>Try It!</strong><br />
+Let’s create an object called “test_data”. Objects can be given any name you choose however, it is bst to avoid using special characters (such as: !@#$%&amp;./][)]) to avoid confusion. As a rule, I typically create objects entirely in lower case (R is case sensetive) and I use underscores **_** as spaces to ensure the object is continious text.</p>
+<p>For our test_data object will will assign a list of numbers 0-10 to become this object using the code below.</p>
+<pre><code>test_data &lt;- c(0:10)</code></pre>
+<p>When creating an object you always begin with the object name followed by the assignmnet syntax <strong>&lt;-</strong>. You can think of this syntax as an arrow which saves the code to the right into the object to the left.</p>
+<p>I have always found it easier to reade code as sentances. This example of code would read aloud as <strong>“Save the numbers 0 through 10 as the object titled test_data.”</strong></p>
+<p><em>Additional Code Notes</em> In addition to the object creation here we also used the <strong>c()</strong> function. The c() function creates a list. In this case we used a list of numbers, however c() can be used to create a list of anything. <strong>c(apple, banana, pear)</strong> would create a list that states <strong>apple, banana, pear</strong>. When using numbers lists can be created by seperating all numbers by commas or (as used above) can be continious using a <strong>:</strong> with the minimum and maximum values.</p>
+</div>
+<p>Now that you have created the object test_data you can call this object using the name anytime you wish to reference the data. This is extremely useful when preforming data modificaiton. Let’s say for example your test_data object represents some quantative information you have collected from your experiment. However, the raw form of the data is not useful to your analysis and instead you would like the log10 of each data point. Without R (or another computing platform) you would have to perform these calculations individually by hand, however you can use the object function to apply this modification to all of your data in the saved object. Try the code below:</p>
+<pre><code>log10(test_data)</code></pre>
+<p>Using the syntax above R will generate the results of this calculation, however if you would like to keep the log10 version of your test_data you must assign it to an object. To do this, you can assign a completely new object or overwrite your previous test_data object. Note that if you overwrite an object <strong>that object will become the new data</strong> and you will not be able to access the non-log10 version for future usage.</p>
+<pre><code>test_data &lt;- log10(test_data) #This will OVERWRITE your test_data object</code></pre>
+<pre><code>test_data_logten&lt;- #This will SAVE your log10 version of the data as a new object called test_data_logten</code></pre>
+<p>Object assignment has thousands of usages in the Rstudio world beyond simple data modification. More often than not in the biological sciences you will be using objects to assign datasets, modify them, and generate plots of different variables/combinations of them. We will explore this functionality in further analyses.</p>
+</div>
+<div id="classes" class="section level2">
+<h2>Classes</h2>
+<p>When using objects it is important to understand the <strong>classes</strong> of these objects. Classes will determine what types of modification can be done to specific objects and how these objects can be visualized. The most important object classes in R are:</p>
+<p><strong>numeric</strong> (also called <strong>double</strong> or <strong>integer</strong> if entirely integer numbers): These are objects are entirely numbers/groups of numbers. <strong>character</strong>: Objects that contain non-numeric values (such as a list of state names). <strong>factor</strong>: Objects that are categorical in nature (such as sampling sites). Factors will indicate which category data belongs to. These are very powerful in life sciences as variable indicators in an experiemnt. <strong>data.frame</strong> (called <strong>tibbles</strong> in tidyverse): Objects that are datasets. Think of these as excel files where observations are the rows, and variables are the columns.</p>
+<p>There are many more variations of classes in R that you may encounter, however these are the primary classes you will be woking with. Note that <strong>character</strong> is the default class for objects in R if the program cannot predetermine which class an object belongs to after creation.</p>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="blue">
+<p><strong>Try It!</strong><br />
+Let’s check the class of our test_data object we created with the code below:</p>
+<pre><code>class(test_data)</code></pre>
+<p>The test_data object should be of the class <strong>integer</strong> if created correctly. R will often “guess” the correct class of an object based on the input that is within the object.</p>
+<p>At times you will likely need to change the class of an object to perform specific operations. Let’s make a modification to test_data using the code below:</p>
+<pre><code>test_data_character &lt;- as.character(as.integer(test_data))</code></pre>
+<p>What the code above has done is created a new object (you can view it in your global environment) called test_data_character which contains the same information as test_data, but instead of a <strong>integer</strong> class is is <strong>character</strong>. This formula of<br />
+<strong>new object name &lt;- previous class(new class(old object name))</strong></p>
+<p><em>Note</em> that some objects cannot be reclassifed to a different class based on the input of the data. For example, you cannot change the list: apple, banana, pear to a numeric class since it does not contain any numbers.</p>
+</div>
+<p>Working in life sciences you will most often be working with a set of data that you have collected and organized into a data table (such as in the case with excel files). Let’s practice with a prepared dataset of the class <strong>tibble</strong>. R comes preloaded some practice datasets that we can train with. For this tutorial we will use the <strong>iris</strong> dataset which is a famous dataset that gives measurements (cm) of various components of three species of iris. To load this data use the syntax below:</p>
+<pre><code>iris_Data &lt;- as.tibble(iris) #make sure you have tidyverse loaded before using this code</code></pre>
+<p>After running this code you should see a new object in your global environment called irid_data containing 150 observations and five variables. Click on the iris_data object in the global environment tab to view the data. You should see that the variables in the dataset are <strong>Sepal.Length, Sepal.Width, Petal.Length, Petal.Width, and Species.</strong> Each row is an observation from the experiment.</p>
+<p><em>Note</em> you can click on any object in your global environment which is a data frame and view it in this manner.</p>
+<p>The <strong>iris</strong> dataset is a <strong>tidy</strong> dataset, meaning it has already been formatted/organized for processing in R and is ready for visualization and/or statistical analyses. We will discuss data <strong>tidying</strong> at a later time with some of our own class data but for now we will run some additional analyses using iris.</p>
+</div>
+<div id="data-wrangling" class="section level2">
+<h2>Data Wrangling</h2>
+<p>Regardless of how tidy your data is you will almost always have to still do some <strong>wrangling</strong> with your dataset to get the important data information from R. Wrangling can be described as the process of organizing your data in a way so your analyses produce appropriate answers to your questions. Wrangling can consist of but is not limited to: filtering, modifying variables, recoding values, removal of NA values, etc.</p>
+<p>The <strong>tidyverse</strong> package enables a number of functions which can be used for these actions. We will try a few in the code chunks below:</p>
+<div id="filter" class="section level3">
+<h3>Filter</h3>
+<p>First let’s try a <strong>filter</strong>! Filter can be used to select observations based on a given condition in the code. We will select all observations from the iris data that are from the species <em>setosa</em>. Enter the code below into a new code chunk. <em>Remember</em> pay close attention to upper and lower cases!</p>
+<pre><code>iris_setosa &lt;- filter(iris_data, Species == &quot;setosa&quot;)</code></pre>
+<p>This code should have created a new object in your global environment called iris_setosa which contains 50 observations and 5 variables. All observations here should be the species <em>setosa</em>. In sentance form, this code chunk reads: “From the object iris_data select all entries where the Species variable is equal to <em>setosa</em> and save them into a new object called iris_setosa.”</p>
+</div>
+<div id="mutate" class="section level3">
+<h3>Mutate</h3>
+<p>Next will will try a <strong>mutate</strong>! Mutate is one of the most useful functions in the tidyverse. This function allows you to modify variables within a dataset (change, recode, add new variables, etc.). Let’s start by adding a new variable which contains the common name of the different iris species (as opposed to the scientific names which are included with the dataset). We want to add this new variable to the complete iris_data dataset so will will work with this object rather than create a new one. In a new code chunk input the code below:</p>
+<pre><code>iris_data &lt;- iris_data %&gt;% mutate(common_name = recode(Species,
+                                    &quot;setosa&quot; = &quot;bristle-pointed iris&quot;,
+                                    &quot;versicolor&quot; = &quot;blue flag&quot;,
+                                    &quot;virginica&quot; = &quot;virginia iris&quot;))
+                                    </code></pre>
+<p>If everything worked you should see that your previously generated object iris_data now contains 150 observations (this is unchanged) and <strong>6</strong> variables. If you view your iris_data object you will now see that there is a new variable titled <strong>common_name</strong> and the common name in the column corresponds to the subsequent scientific name.</p>
+<p>If you received an error with this code go back through line by line and check your <strong>&quot;&quot;</strong> <strong>,</strong> and <strong>()</strong> usage. Hitting the <strong>return</strong> key at any point when writing code will have no effect on the outcome. <em>Note</em> in the code above I use return after each species name recode to organize the code in a more reabable manner. This code line would also work if it was created as continious syntax (however this is often tough on the eyes).</p>
+<p>This code chunk reads as: “Take the iris_data object then add a new variable called common_name. Populate this variable based on the information in the Species variable: setosa is equal to bristle-pointed iris, versicolor is equal to blue flag, and virginica is equal to virginia iris.”</p>
+<p><strong>Take special note</strong> of the usage of the <strong>%&gt;%</strong> syntax. This is called a <strong>pipe</strong>. Pipes allow you to modify data objects by entering the name of the object followed by the %&gt;% syntax. In the sentance above the pipe would represent the <strong>then</strong> in the code.</p>
+<p>Next let’s use mutate to modify an existing variable. We will change the Sepal.Lenght variable from cm to mm. Use the code below:</p>
+<pre><code>iris_data &lt;- iris_data %&gt;% mutate(Sepal.Length = Sepal.Length * 10)</code></pre>
+<p>If everything worked well you should see that all of the Sepal.Length measures in your iris_data object have been multiplied by 10 to give measures in mm.</p>
+<p>This code chunk reads as: “Take the iris_data object and change the Sepal.Length variable. The new values will be the previously recorded values in Sepal.Length multiplied by 10.”</p>
+<style>
+div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
+</style>
+<div class="blue">
+<p><strong>Try It!</strong><br />
+Change the three remaining measurement values (Sepal.Width, Petal.Length, and Petal.Width) in your iris_data object from cm to mm using the code template generated above.</p>
+</div>
+</div>
+<div id="select" class="section level3">
+<h3>Select</h3>
+<p>Lastly, let’s try a <strong>select</strong> function. Select is used to remove variables from a dataset based on your needs. This is a very useful function when you have data with a high number of variables. For example let’s say we are only interested in the <strong>width</strong> variables in our data and want to remove the two length variables, select is ideal for this situation. Use the code below to select the desired variables.</p>
+<pre><code>iris_data_width_only &lt;- iris_data %&gt;% select(Sepal.Width, Petal.Width, Species, common_name)</code></pre>
+<p>This code chunk reads as: “Using the iris_data object select the variables: Sepal.Width, Petal.Width, Species, and common_name and save them into the new object iris_data_width_only.”</p>
+<p>Alternately, you can <strong>deselect</strong> using the minus syntax (displayed below). Both options will produce the same results.</p>
+<pre><code>iris_data_width_only &lt;- iris_data %&gt;% select(-Sepal.Length, -Petal.Length)</code></pre>
+<p>This code chunk reads as: “Using the iris_data object remove the variables: Sepal.Length and Petal.Length and save the remaining variables into the new object iris_data_width_only.”</p>
 <p>To Do</p>
-<p>Coding Intro objects classes basic commands tidyverse ggplot</p>
+<p>Coding Intro</p>
+<pre><code>basic commands
+tidyverse
+ggplot</code></pre>
+</div>
+</div>
 </div>
 </div>
 
@@ -1742,7 +1841,7 @@ In the blank code chunk you created type the syntax below then hit the <strong>g
 
 <div id="postamble" data-toggle="wy-nav-shift" class="status">
 <p class="author"><span class="glyphicon glyphicon-user"></span> William Norfolk</p>
-<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2020-01-06</p>
+<p class="date"><span class="glyphicon glyphicon-calendar"></span> 2020-01-11</p>
 </div>
 
 
