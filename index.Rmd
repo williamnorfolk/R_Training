@@ -43,7 +43,7 @@ _Now we are ready to get started!_
 Now that we have everything installed it is time to open up Rstudio.
 
 You should see a three-paned screen that looks similar to the image below:  
-_Do not worry if you screen is a different color (I will show you how to change this later if desired). Additionally, do not worry about the file names listed in the bottom right pane (these will change based on your own computer)._  
+_Do not worry if you screen is a different color. Additionally, do not worry about the file names listed in the bottom right pane (these will change based on your own computer)._  
 
 ```{r openscreen, out.height = "100%", out.width = "100%", echo=FALSE}
 knitr::include_graphics("./images/rstudio_three_pane.png") 
@@ -398,12 +398,12 @@ This code chunk reads as: "Take the iris_data object then add a new variable cal
 Next let's use mutate to modify an existing variable. We will change the Sepal.Lenght variable from cm to mm. Use the code below:
 
 ```
-iris_data <- iris_data %>% mutate(Sepal.Length = Sepal.Length * 10)
+iris_data_mm <- iris_data %>% mutate(Sepal.Length = Sepal.Length * 10)
 ```
 
-If everything worked well you should see that all of the Sepal.Length measures in your iris_data object have been multiplied by 10 to give measures in mm. 
+If everything worked well you should see that all of the Sepal.Length measures in your newly created iris_data_mm object have been multiplied by 10 to give measures in mm. 
 
-This code chunk reads as: "Take the iris_data object and change the Sepal.Length variable. The new values will be the previously recorded values in Sepal.Length multiplied by 10."
+This code chunk reads as: "Take the iris_data object and change the Sepal.Length variable. The new values will be the previously recorded values in Sepal.Length multiplied by 10. Then save these data in the object irid_data_mm"
 
 <style>
 div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
@@ -411,7 +411,7 @@ div.blue { background-color:#e6f0ff; border-radius: 5px; padding: 20px;}
 <div class = "blue">
 
 **Try It!**  
-Change the three remaining measurement values (Sepal.Width, Petal.Length, and Petal.Width) in your iris_data object from cm to mm using the code template generated above. 
+Change the three remaining measurement values (Sepal.Width, Petal.Length, and Petal.Width) in your iris_data_mm object from cm to mm using the code template generated above. 
 </div>
 
 ### Select
@@ -430,14 +430,84 @@ iris_data_width_only <- iris_data %>% select(-Sepal.Length, -Petal.Length)
 ```
 This code chunk reads as: "Using the iris_data object remove the variables: Sepal.Length and Petal.Length and save the remaining variables into the new object iris_data_width_only."
 
+## ggplot
 
-To Do
+Now that we have run through a few simple coding exercises we will breifly introduce the functionality of ggplot. Ggplot is the plotting package loaded within tidyverse and have become second to none for the visualization of data based on R coding. The functions within ggplot are designed to work well with the tidy functions used by the library and thus serves a the transition from data processing to data visualization. 
 
+The functionaloty of ggplot is highly extensive and warrents an entire tutorial if not a semester-long course to learn thoroughly. We will touch on a few examples to learn the basic patterns of code input for usage in the library with a strong focus on the usage of data frames (or tibbles) to supply the plotting data. 
 
+There are a number of plots that can be created using ggplot a great resource for work in this program can be found in the Rstudio ggplot cheat sheet which can be viewed through [this link](https://rstudio.com/wp-content/uploads/2015/03/ggplot2-cheatsheet.pdf). 
 
-Coding Intro
+### Geom Usage
+
+**Geom** is the base syntax that is used to create figures in ggplot. Geom is short for geometry or how you would like the data to appear. Within the library there are many variants of geom such as: geom_bar (barplots), geom_line(line plots), geom_boxplot, etc. It is important to understand your data and your questions before selecting the geom you would like to use (different functions are more/less approproate for specific datasets). The ggplot Cheat Sheet linked above is an excellent resource to try determine what type of plot will work better for you. 
+
+Lets start by making a simple box plot in ggplot. It is always a good idea to check your data before you begin using plotting functions in case your classes are incorrect. My favorite **data check** function is the **glimpse** function. In a new code chunk type the syntax below:
+
+```
+glimpse(iris_data)
+```
+You should see an ouptut box appear under the code chunk that shows the total number of observations (150) total variables (6) and lists the variables as well as the first few values in each variable for the dataset. Additionally, next to each variable in the list the class is indicated between **<>** symbols. In out iris_data you should see Sepal.Length, Sepal.Width, Petal.Length, and Petal.Width are class **dbl** or double (numeric) and Species and common_name are class **fct** or class factor (categorical). 
+
+If you classes are in this breakdown automatically (they should be without any modification) however if any variables are incorecct, in a new code chunk reclass the variables using the syntax introduced above in the **classes** subsection. 
+
+Now let's start plotting! We will being with a box plot of Sepal Length by species. 
+
+In a new code chunk use the following syntax:
+
+```
+ggplot(iris_data, aes(Species, Sepal.Length)) + geom_boxplot()
+```
+If all goes well you should see the plot below appear in an output box below the code chunk.
+
+```{r gg_one, out.height = "100%", out.width = "100%", echo=FALSE}
+knitr::include_graphics("./images/ggplot_1.png") 
+```
+
+The function design used above is standard syntax for the creation of various figures in ggplot and can be used to generate a wide range of visuals with simiple substitutions. The generic design of this plotting function is as below. _Note_ all components in **bold** below will change based on your data and desired plot. _Second note_ only some geoms require a y variable.
+
+ggplot(**name of the data object**, aes(**x variable**, **y variable**)) + geom_**desired plot type**()
     
+Now let's try to add some asthetics that would be required for publication. Let's create box plots of petal length by species. However, this time we will add axes labels and a title. Try to generate the based plot first on your own then see then add the code below to the **end** of the geom function to include the desired asthetics.
+
+```
++ xlab("Iris Species") + ylab("Petal Length (cm)") + ggtitle("Iris Petal Length by Species")
+```
+
+If you are having trouble creating the figure syntax the full code can be viewed below:
+
+```
+ggplot(iris_data, aes(Species, Petal.Length)) + geom_boxplot() + xlab("Iris Species") + ylab("Petal Length (cm)") + ggtitle("Iris Petal Length by Species")
+```
+If done correctly, you should see the figure below:
+
+```{r gg_two, out.height = "100%", out.width = "100%", echo=FALSE}
+knitr::include_graphics("./images/gg_3.png") 
+```
     
-    basic commands
-    tidyverse
-    ggplot
+The asthetic functions **xlab**, **ylab**, and **ggtitle** are a few examples of the most basic functions for improving the look of your figures in ggplot. There are hundereds of different plot modifications, color schemes, annotations, and other additions that can be made to improve your visuals. I encourage you to explore any asthetics that are of interest to you and attempt to apply them to your plot training over the course of the semester. 
+
+For the last example in this tutorial we will combine some of the wrangling code with the plotting code to create a different kind of plot with ggplot. 
+
+In this example, we are interested in the distribution of the Sepal Width of **only** the setosa species. In this example we will first need to **filter** our data then create a **geom_density** plot with the filtered data. 
+
+Try to attempt the code on your own before reviewing the answers below. 
+
+
+
+#### Filter Code
+
+```
+setosa_only <- filter(iris_data, Species == "setosa")
+```
+#### Plotting Code
+
+```
+ggplot(setosa_only, aes(Sepal.Width)) + geom_density()
+```
+
+If done correctly you should see the plot below:
+
+```{r gg_four, out.height = "100%", out.width = "100%", echo=FALSE}
+knitr::include_graphics("./images/gg4.png") 
+```
