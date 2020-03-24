@@ -1,0 +1,176 @@
+---
+title: "Intro to R Training (class sheet)"
+template author: "William Norfolk"
+student name: "INSERT NAME HERE" 
+date: "1/12/2020"
+output: word_document
+---
+
+Welcome to R training! 
+
+This script is a template for you to complete during the guided in-class R training activity. Follow along with the different subheadings and complete coding activities in each coding "chunk" within the script. 
+
+I encourage you to write notes/document all analysis functions and details of Rstudio usage that will be helpful for you in the future. Note areas are indicated by _yellow text between two underscores_ and appears as the text in the sentance does. 
+
+Your TA will introduce the core concepts of the subheadings below:
+
+## Creating a New R Script
+
+_ADD ANY NOTES HERE_
+
+
+
+```{r}
+
+```
+
+
+
+
+## The Rstudio Screen
+There are four panels to consider within the Rstudio screen: the console, the script tab, the global environment, and the file viewer.
+
+_ADD ANY NOTES HERE_
+
+### The Console
+Bottom left. The console is responsible for all of the computational power of the R program. In this tab you can run code, operations, and view recent activity. **Note** anything entered into the console will not be saved when using Rstudio after you close the instance. All saved code must be entered into a script.
+
+_ADD ANY NOTES HERE_
+
+### The Script Tab
+Top left. The script tab is the portion of Rstudio where all code, operations and actions can be entered then saved. Think of scripts as documents that contain a combination of code and plain text which Rstudio interprets differently based on the entry. **Note** the script tab will only appear if you have an active script open (it will not open automatically). 
+
+_ADD ANY NOTES HERE_
+
+### The Global Environment
+Top right. The global environment displays all of the objects/datasets/functions you have created with your R code during your current R session. 
+
+_ADD ANY NOTES HERE_
+
+### The File Viewer
+Bottom right. The file viewer shows you the active files you are using during your current Rstudio session and should mimic your File Explorer (PC) or Finder (Mac).
+
+_ADD ANY NOTES HERE_
+
+
+
+
+
+## Markdown Usage
+A markdown file is a type of R script that is very useful for learning how to use Rstudio. Think of markdown files as word documents with code "chunks" mixed in with plain readable text.
+
+_ADD ANY NOTES HERE_
+
+### The YAML Header
+The colorful lines at the beginning of your markdown file. These provide useful information for the creation and parameters of your script.
+
+_ADD ANY NOTES HERE_
+
+### Code Chunks 
+This is where you enter code for Rstudio to run. Create new chunks with control+alt+i (PC) or command+option+i (Mac).
+
+_ADD ANY NOTES HERE_
+
+
+
+
+
+
+## Libraries
+Libraries of the workhorse of R computation. Think of libraries as add-ons that extend the functionality of base R to allow for complex analyses. To use a library you must **install** the library **once** but you must **load** the library for **each instance** of Rstudio where you would like to use it.
+
+```{r}
+library(tidyverse)
+```
+
+
+```{r}
+iris_data <- as_tibble(iris)
+iris_data
+```
+
+
+### Installation and Loading
+Install syntax: install.packages("PACKAGE NAME")
+Load syntax: library(PACKAGE NAME)
+
+_ADD ANY NOTES HERE_
+
+### The Tidyverse
+Arguably the most widely used R package. Designed for data organization, processing, tidying, and visualization.
+
+_ADD ANY NOTES HERE_
+
+
+```{r}
+ggplot(iris_data, aes(Petal.Length)) + geom_density()
+```
+
+```{r}
+ggplot(iris_data, aes(Species, Petal.Length)) + geom_boxplot()
+
+```
+
+
+
+
+
+```{r}
+setosa_only <- filter(iris_data, Species == "setosa")
+
+ggplot(setosa_only, aes(Petal.Length)) + geom_density()
+
+```
+
+
+```{r}
+iris_data <- iris_data %>% mutate(common_name = recode(Species, 
+                                                      "setosa" = "bristle-pointed iris",
+                                                      "versicolor" = "blue flag",
+                                                      "virginica" = "virginia iris"))
+```
+
+
+
+
+
+
+
+
+## Coding Crash Course
+
+_ADD ANY NOTES HERE_
+
+### Objects
+Things that you create and are saved in R. Most commonly objects are used to store datasets or suubsets. Objects are given names by you when coding. It is best to avoid special characters such as: !@#$ etc. to avoid confusion.
+
+_ADD ANY NOTES HERE_
+
+### Classes
+These are types of data that R can use. The common types that will be important for learning R are: Numeric (also called Double or Integer), Character, Factor, and Data Frame(called Tibbles in tidyverse). 
+
+_ADD ANY NOTES HERE_
+
+### Data Wrangling
+This is the process of organizing data into a format where it is usable in R and/or answers one of your research questions. Data wrangling is highly specific to the dataset you are using and requires a bit of R experience before you can design a plan. We will work ad a group with some aspects of data wrangling with this class.
+
+_ADD ANY NOTES HERE_
+
+### ggplot
+ggplot is the core component of the tidyverse that allows researchers to plot high quality data visuals in Rstudio. Basic usage of some of the functionality of ggplot is the overall goal of R usage in this class.
+
+_ADD ANY NOTES HERE_
+
+
+```{r}
+iris_mm <- iris_data %>% mutate(Sepal.Length = Sepal.Length * 10)
+```
+
+
+
+
+
+
+
+
+
