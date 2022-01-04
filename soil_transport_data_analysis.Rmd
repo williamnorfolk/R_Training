@@ -1,0 +1,165 @@
+---
+title: "soil_transport_data_analysis"
+author: "William Norfolk"
+date: "2/17/2021"
+output:
+  word_document: default
+  html_document: default
+---
+
+
+First Load the libraries you will need. Today we will be using **tidyverse** (from the introductory activity), **readxl**, and **ggpubr**. readxl allows you to read in Excel data and ggpubr expands the functionality of the ggplot() library in tidyverse. 
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(ggpubr)
+```
+
+
+Next we will load the data. 
+1) Prior to running this code chunk, make sure you have saved the raw data file (Excel sheet on eLC) to a folder with the title soil_transport_class_data as indicated below.  
+2) Next, ensure you have saved this script file to **the same folder** to ensure Rstudio can read in the data.   
+3) If your data and script are in different folders you will receive and error along the lines of "so such file in directory."  
+4) Lastly, on your Rstudio screen look at the toolbar on the top of the screen, click **session** then **set working directory** and select **to source file location.** This will tell your Rstudio to pull the data from the same folder where the script is saved. 
+
+```{r}
+#read in the data and make an object called raw_data
+raw_data <- read_excel("./soil_transport_class_data.xlsx")
+```
+
+```{r}
+#remove extra data columns
+remove_extra_columns <- raw_data %>% select(c(water, time_point, cfus_per_ml)) 
+#pivot data to wide format
+wide_data <- pivot_wider(remove_extra_columns, names_from = water, values_from = cfus_per_ml) %>%
+  rename("cfus_0ppt" = "0",
+         "cfus_10ppt" = "10",
+         "cfus_35ppt" = "35",
+         "cfus_45ppt" = "45")
+```
+
+
+```{r}
+rate_of_change <- wide_data %>%
+  dplyr::mutate(Previous = lag(cfus_0ppt), Next = lead(cfus_0ppt), Change = Next - Previous)
+```
+
+
+
+
+```{r}
+#take a look at the data to ensure all variables are the correct class
+#remember "dbl" or double is a numeric class whereas "chr" or character is a character (or word) class. 
+glimpse(raw_data)
+
+
+#we will want water to be a "character" variable
+raw_data$water <- as.character(as.numeric(raw_data$water))
+
+```
+
+It looks like our data is all set so we can begin working on analysis!
+
+
+First let's start with a simple look at the CFUs eluted off the column over time. For this we will make a line plot with each water type stacked on top of one another to view all of the data. 
+
+```{r}
+#ADD CODE HERE!
+
+#make the line_plot figure
+
+
+
+
+```
+
+Wow! It looks like the 0ppt water sample is substantially faster than the rest!
+
+Looking at this figure is very informative about the 0ppt sample, however it is very difficult to see the trends in the other samples. To properly view the CFUs data we will need to log transform the values of cfus_per_ml to remake the plot
+
+```{r}
+#log transform cfu_per_ml
+raw_data <- raw_data %>% mutate(log_cfus_per_ml = log10(cfus_per_ml))
+```
+
+```{r}
+#ADD CODE HERE!
+
+#make the log_line_plot figure
+
+
+
+
+
+```
+
+Much better! Now we can see the full trends of the data. Let's clean this plot up!
+
+```{r}
+#ADD CODE HERE!
+
+#fix the axis labels and the gridded backgroud
+log_line_plot 
+
+
+
+```
+
+For the last part of our visualization let's consider the inoculum we used. 
+
+Since each of our inoculum concentrations are potentially different we can potentially have a much higher concentration in one column vurses another. This is important to consider as you may see differences in effluent CFUs if the column has a greater concentration added to begin with!
+
+Looking at the data we have the inoculum CFUs per mL, however we want to know exactly how many CFUs were added to the column not the concentration for this plot. If you recall, in lab we added ~0.5 of a pore volume of inoculum to each column at the concentrations indicated in the raw data. To get the total CFUs added we need to multiply the inoculum_cfus_per_ml variable by 0.5 the pore volume. 
+
+We will do this in two steps, 1) create a new column containing the 0.5 pore volume and 2) create another new column with the total CFUs added to the column. 
+
+```{r}
+#Step1: make 0.5 pore volume variabe
+raw_data <- raw_data %>% mutate(half_pore_volume = pore_volume / 2)
+```
+
+```{r}
+#Step 2: make a total_cfus_added variable
+raw_data <- raw_data %>% mutate(total_cfus_added = inoculum_cfus_per_ml * half_pore_volume)
+```
+
+Now we can plot the total CFUs added! 
+
+```{r}
+#ADD CODE HERE!
+
+#make the cfus_added_plot figure here
+
+
+```
+
+
+```{r}
+#ADD CODE HERE!
+
+#Lets clean this up! We need to change the axis labels, the legend label, and the weird grid background
+
+cfus_added_plot 
+
+
+
+```
+
+
+For our last activty we will wrap up with an open-ended visualization option for you! In the code chunk below, creat another figure of your choosing to showcase some interesting aspect of the data. Your figure can use the combined class data or any type subsetted data you are interested in. Make sure to clean up some of the asthetics (axes labels, etc.).
+
+```{r}
+#ADD CODE HERE!
+
+#make your plot here
+```
+
+Now that you are done, **knit** your markdown file to a **Word** document and upload the file under the "Soil Transport Analysis Notebook Check" deopbox on eLC. 
+
+
+
+
+
+
+

@@ -1,0 +1,172 @@
+---
+title: "microbial_transport_in_air_analysis"
+author: "William Norfolk"
+date: "3/6/2021"
+output: html_document
+---
+
+
+Prior to starting please ensure you have downloaded the air_analysis.RMD file and the air_class_data.xlsx file from eLC and save them into the SAME folder on your computer. 
+
+Also, please ensure that your working directory is correct by clicking on **Session + Set Working Director + To Source File Location.**
+
+Load the libraries needed for processing.
+
+```{r}
+library(tidyverse)
+library(readxl)
+```
+
+Read in the raw data from the Excel sheet.
+```{r}
+raw_data <- read_excel("./air_class_data.xlsx")
+```
+
+Take a look at the classes of each data column.
+```{r}
+glimpse(raw_data)
+```
+
+Remove all data rows except the "Deposition 60" rows.
+```{r}
+dep_60_only <- subset(raw_data, raw_data$treatment == "deposition_60")
+```
+
+
+Make a bar plot of Deposition_60 total CFUs by location.
+
+
+```{r}
+#ADD TOTAL_CFU_PLOT CODE HERE
+#USE THIS PLOT IN YOUR REPORT
+
+
+
+```
+
+
+
+This plot looks good! It definitely looks like the indoor sites have substantially lower Total CFUs than the outdoor sites. Let's try to take a look at all of the data to see if there are any other trends we can visualize.
+
+
+```{r}
+#ADD TOTAL_CFU_SCATTER PLOT CODE HERE
+
+
+
+```
+
+
+Not bad! But not terrible informative. Let's try a time series line plot of the depositon data.
+
+First we need to remove any "filter" samples.
+
+Next we need to recode out deposition data so it is numeric and can be plotted properly.
+
+```{r}
+#remove all "filter data points
+remove_filters <- raw_data[!grepl("filter", raw_data$treatment), ]
+
+#recode deposition times as numeric values
+remove_filters <- remove_filters %>% mutate(dep_time = recode(treatment,
+                                                        "deposition_0" = 0,
+                                                        "deposition_20" = 20,
+                                                        "deposition_40" = 40,
+                                                        "deposition_60" = 60))
+
+```
+
+Now let's make the line plot! For this plot we will stack a line plot and a scatter plot.
+
+
+```{r}
+#ADD DEPOSITION_TIME_SERIES PLOT CODE HERE
+
+
+```
+
+
+Looking at the scatter and line plots, it looks like the data might best be visualized using a boxplot. Using these, we can demonstrate the full range of each of the locations of interest. 
+
+Below we will make a series of boxplots that show the range of "total_cfu" values for each location.
+
+
+```{r}
+#ADD LOCATION BOXPLOT CODE HERE
+
+
+```
+
+
+Very nice! The total data plots look good! Moving forward it would be interesting to take a look at the breakdown of bacteria, fungi, and actinomycetes at each locaiton. The best way to show this would be with side-by-side bar plots showing each of the microbe types. 
+
+To do this we will need to start by pivoting our data from a wide format to a long format to improve our variables. 
+
+
+```{r}
+#use pivot_longer to transform data to long format
+long_format <- raw_data %>% 
+  pivot_longer(cols = c(-group_number, -location, -treatment, -setting, -location_type), 
+               names_to = "microbe", values_to = "cfu_count")
+
+```
+
+Let's also remove the total_cfu observations also since they will likely drown out our other measures.
+```{r}
+long_format <- long_format[!grepl("total_cfus", long_format$microbe), ]
+```
+
+Now lets make the plot!
+
+
+```{r}
+#ADD MULTI_BAR CODE HERE
+#USE THIS PLOT IN YOUR REPORT
+
+
+
+```
+
+
+```{r}
+#change microbe names code
+
+long_format <- long_format %>% mutate(microbe = recode(microbe,
+                                                       "total_bacteria" = "Bacteria",
+                                                       "total_fungi" = "Fungi",
+                                                       "total_actino" = "Actinomycetes"))
+
+```
+
+To finish the activity, you will make one more figure to include in your paper. The figure can demonstrate any aspect of the data that you would like but it should contribute to the discussion in your paper.
+
+You are welcome to use the full raw_data file or you can create additional subsetted data using the code structure below.
+
+```{r}
+#Use this structure to subset by any treatment (you will need to modify the filter_5 portion as needed)
+filter_5_only <- subset(raw_data, raw_data$treatment == "filter_5")
+
+#use this structure to subset by any location (you will need to modify the grad_office portion as needed)
+grad_office_only <- subset(long_format, long_format$location == "grad_office")
+```
+
+You can also use the data categories added in the columns setting and location_type.
+
+```{r}
+#use this format to designate your plot by location_type
+long_format %>% ggplot() +
+  geom_bar(aes(x = location_type, y = cfu_count, fill = microbe), stat = "identity", position = "dodge")
+```
+
+```{r}
+#ADD YOUR CODE HERE
+#USE THIS PLOT IN YOUR REPORT
+
+
+
+```
+
+
+
+
+

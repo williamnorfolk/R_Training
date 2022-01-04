@@ -1,0 +1,95 @@
+---
+title: "water_quality_analysis"
+author: "William Norfolk"
+date: "3/21/2021"
+output: html_document
+---
+
+```{r}
+#load the libraries needed
+library(tidyverse)
+library(readxl)
+```
+
+```{r}
+#pull in the raw data
+raw_data <- read_excel("./water_quality_data.xlsx")
+
+glimpse(raw_data)
+```
+
+```{r}
+#combine replicates to average values
+combine_reps <- raw_data %>% group_by(group_replicate, site, best_dilution, water_speed, rainfall) %>%
+  summarise_if(is.numeric, mean) %>%
+  ungroup() %>%
+  mutate(site = recode(site,
+                       "lake_herrick" = "Lake Herrick",
+                       "tanyard_creek" = "Tanyard Creek",
+                       "lilly_branch" = "Lilly Branch",
+                       "turtle_pond" = "Turtle Pond"))
+```
+
+Make figure #1
+
+ADD CODE BELOW
+```{r}
+#***********************************KEEP THIS PLOT FOR YOUR LAB REPORT*******************************
+#make site plot
+
+
+#****************************************************************************************************
+```
+
+Significance test #1
+
+ADD CODE BELOW
+```{r}
+#***********************************KEEP THESE RESULTS FOR YOUR LAB REPORT***************************
+#test for significance using the lm function
+
+
+#****************************************************************************************************
+```
+
+Make figure #2 and significance test #2
+
+ADD CODE BELOW
+```{r}
+#******************ADD ONE CLEANED UP RAINFALL OR WATER SPEED FIGURE AND SIG TEST********************
+
+
+
+
+
+#****************************************************************************************************
+```
+
+```{r}
+#all points figure
+all_points <- raw_data %>% ggplot() +
+  geom_boxplot(aes(x = reorder(site, -cfus_per_100_ml), y = cfus_per_100_ml)) +
+  geom_jitter(aes(x = reorder(site, -cfus_per_100_ml), y = cfus_per_100_ml, color = group_replicate),size = 2)
+
+all_points
+```
+
+```{r}
+#subset datasets
+only_tanyard <- subset(combine_reps, site == "Tanyard Creek")
+only_herrick <- subset(combine_reps, site == "Lake Herrick")
+```
+
+Make figure #3 (no significance test required)
+
+```{r}
+#****************************************ADD ONE ADDITIONAL FIGURE TO YOUR REPORT************************
+
+
+
+
+#********************************************************************************************************
+```
+
+
+
